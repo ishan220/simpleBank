@@ -61,6 +61,6 @@ jobs:
           sudo mv migrate /usr/bin
           which migrate
       - name: Run migrations
-        run: gmake migrateup
+        run: make migrateup
       - name: Test
         run: gmake test

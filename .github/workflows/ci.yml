@@ -28,7 +28,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Set Up Go 1.x
-        run: actions/setup-go@v2
+        uses: actions/setup-go@v2
       ##paramter for the above run command
         with:
           go-version: ^1.21

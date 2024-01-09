@@ -1,4 +1,4 @@
-module SimpleBank
+module github.com/simpleBank.git
 
 go 1.21.5
 

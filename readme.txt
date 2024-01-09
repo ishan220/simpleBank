@@ -180,3 +180,7 @@ enter username:ishan220
 enter password:settings->developer settings->gen personal token->
 copy paste that token(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)
 https://github.com/ishan220/simpleBank.git main
+
+
+to unset the cached credentials:
+git config --global --unset credential.helper

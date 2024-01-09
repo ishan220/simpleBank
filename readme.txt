@@ -167,3 +167,14 @@ but when updating the result in its own tranaction , it will consider the updati
 
  1)Read uncommitted behave as read committed.
  2) In repeatable read scond txn will throw erro if we update ,saying first txn already updated.
+
+
+###
+git push steps
+
+git init  --in root directory of Project
+git add .
+git commit -m "message"
+git push --set-upstream https://github.com/ishan220/simpleBank.git main
+enter username:ishan220
+enter password:settings->developer settings->gen personal token->copy paste that token

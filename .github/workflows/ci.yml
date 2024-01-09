@@ -53,6 +53,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Check Out Code into the Go Module directory
         uses: actions/checkout@v2
-        
+      - name: Run migrations
+        run: gmake migrateup
       - name: Test
         run: gmake test

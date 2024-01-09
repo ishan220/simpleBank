@@ -183,4 +183,7 @@ https://github.com/ishan220/simpleBank.git main
 
 
 to unset the cached credentials:
-git config --global --unset credential.helper
+//git config --global --unset credential.helper  //this did not work
+git clone https://github.com/ishan220/simpleBank.git
+git pull --rebase https://github.com/ishan220/simpleBank.git main /when local commit is behind remote one
+delete the personal tokens and create the new one where workflow is checked.

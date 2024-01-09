@@ -187,3 +187,7 @@ to unset the cached credentials:
 git clone https://github.com/ishan220/simpleBank.git
 git pull --rebase https://github.com/ishan220/simpleBank.git main /when local commit is behind remote one
 delete the personal tokens and create the new one where workflow is checked.
+
+
+####
+make mod init in project root , directory where you want to run test command(go test -cover ./...) to cover all packages/sub packages

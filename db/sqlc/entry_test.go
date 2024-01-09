@@ -1,10 +1,11 @@
 package db
 
 import (
-	"SimpleBank/util"
 	"context"
 	"testing"
 	"time"
+
+	"SimpleBank/db/util"
 
 	"github.com/stretchr/testify/require"
 )

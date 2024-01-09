@@ -53,12 +53,12 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Check Out Code into the Go Module directory
         uses: actions/checkout@v2
-      - name: Run migrations
-        run: gmake migrateup
       - name: install migrate pkg to run migrate command on runner machine
         run: |
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.0/migrate.darwin-amd64.tar.gz | tar xvz
           sudo mv migrate /usr/bin
           which migrate
+      - name: Run migrations
+        run: gmake migrateup
       - name: Test
         run: gmake test

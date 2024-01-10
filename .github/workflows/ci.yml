@@ -57,7 +57,7 @@ jobs:
         uses: actions/checkout@v2
       - name: install migrate pkg to run migrate command on runner machine
         run: |
-          tar xvz migrate.linux-amd64.tar
+          tar xvz migrate.linux-amd64.tar.gz
           sudo mv migrate /usr/bin/migrate
           cd /usr/bin
           which migrate

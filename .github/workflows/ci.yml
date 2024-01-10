@@ -57,11 +57,9 @@ jobs:
         uses: actions/checkout@v2
       - name: install migrate pkg to run migrate command on runner machine
         run: |
-#         curl -L https://github.com/golang-migrate/migrate/releases/tag/v4.17.0/migrate.linux-arm64.tar.gz |
           tar xvz migrate.linux-amd64.tar
           sudo mv migrate /usr/bin/migrate
           cd /usr/bin
-          chmod 777 migrate
           which migrate
       - name: Run migrations
         run: gmake migrateup

@@ -8,8 +8,8 @@ dropdb:
 	docker exec -it postgres16 dropdb --username=root --owner=root simple_bank
 
 migrateup:
-#	migrate -path=db/migration -database "postgres://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
-	db-migrate -source file:db/migration -database postgres://root:secret@localhost:5432/simple_bank?sslmode=disable up
+	migrate -path=db/migration -database "postgres://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
+#	db-migrate -source file:db/migration -database postgres://root:secret@localhost:5432/simple_bank?sslmode=disable up
 migratedown:
 	migrate -path=db/migration -database "postgres://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
 #	migrate -source file:db/migration -database postgres://root:secret@localhost:5432/simple_bank?sslmode=disable up

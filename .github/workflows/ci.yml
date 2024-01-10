@@ -63,6 +63,6 @@ jobs:
           chmod 777 migrate
           which migrate
       - name: Run migrations
-        run: make migrateup
+        run: gmake migrateup
       - name: Test
         run: gmake test

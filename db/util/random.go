@@ -55,3 +55,7 @@ func RandomAccountID() int64 {
 	}
 	return genAccount
 }
+
+func RandomEmail() string {
+	return fmt.Sprintf("%s@email.com", RandomString(6))
+}

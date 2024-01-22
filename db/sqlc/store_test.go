@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -12,6 +11,7 @@ import (
 
 func TestTransferTx(t *testing.T) {
 	store := NewStore(testDB)
+	fmt.Printf("Type of store object returned from Newstore func %T", store)
 	account1 := CreateRandomAccount(t)
 	account2 := CreateRandomAccount(t)
 	fmt.Println(">>Before Tx", account1.Balance, account2.Balance)
@@ -22,7 +22,7 @@ func TestTransferTx(t *testing.T) {
 	results := make(chan TransferTxResult, n)
 	errs := make(chan error, n)
 	//wg := &sync.WaitGroup{}
-	mut := &sync.RWMutex{}
+	//mut := &sync.RWMutex{}
 	//wg.Add(n)
 
 	for i := 0; i < n; i++ {
@@ -30,11 +30,16 @@ func TestTransferTx(t *testing.T) {
 		go func() {
 			//strconv.ParseInt("-42", 10, 64)
 			ctx := context.WithValue(context.Background(), txKey, txName)
+			// result, err := store.TransferTx(ctx, TransferTxParams{
+			// 	FromAccountID: account1.ID,
+			// 	ToAccountID:   account2.ID,
+			// 	Amount:        amount,
+			// }, mut)
 			result, err := store.TransferTx(ctx, TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,
-			}, mut)
+			})
 
 			fmt.Println("Receiving to results channel:")
 			results <- result

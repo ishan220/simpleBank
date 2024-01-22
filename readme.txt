@@ -191,3 +191,227 @@ delete the personal tokens and create the new one where workflow is checked.
 
 ####
 make mod init in project root , directory where you want to run test command(go test -cover ./...) to cover all packages/sub packages
+
+####
+gin-- web framework(most popular)
+
+Get request for gin(URI):
+http://localhost:8080/accounts/1
+
+Get request for gin(form/params):
+
+http://localhost:8080/accounts?page_id=2&page_size=5
+
+#######
+Viper
+1) Find,load,unmarshall config file
+  JSON,TOML,YAML,ENV,INI
+2) Read config from environment variables or flags
+(Override existing values,set default values)
+3)Read config from remote system
+(Etcd,Consul)
+4)Live Watching and writing config file
+(Reread changed file ,save any modifications)
+
+Viper uses the following precedence order. Each item takes precedence over the item below it:
+
+explicit call to Set
+flag
+env
+config
+key/value store
+default
+
+go get github.com/spf13/viper
+###############
+go install github.com/golang/mock/mockgen@v1.6.0
+go get github.com/golang/mock/mockgen/model
+go install github.com/golang/mock/mockgen/model
+
+
+mockgen -package mockdb -destination db/mock/store.go SimpleBank/db/sqlc Store
+
+
+this will create interface with the mentioned package and in the mentioned destination
+and with the mentioned interface i.e.Store present in the mention import path(this is called reflection mod)
+#########
+In sqlc.yaml
+On turning emit_interface as true , 
+it will provide interface to the all the sql functions, in this for eg,
+It provided Querier interface
+
+
+##########
+Example of interface and struct being used together
+type AuthorDetails interface {
+    details()
+}
+ 
+// Interface 2
+type AuthorArticles interface {
+    articles()
+}
+ 
+// Structure
+type author struct {
+    a_name    string
+    branch    string
+    college   string
+    year      int
+    salary    int
+    particles int
+    tarticles int
+}
+ 
+// Implementing method 
+// of the interface 1
+func (a author) details() {
+ 
+    fmt.Printf("Author Name: %s", a.a_name)
+    fmt.Printf("\nBranch: %s and passing year: %d", a.branch, a.year)
+    fmt.Printf("\nCollege Name: %s", a.college)
+    fmt.Printf("\nSalary: %d", a.salary)
+    fmt.Printf("\nPublished articles: %d", a.particles)
+ 
+}
+ 
+// Implementing method
+// of the interface 2
+func (a author) articles() {
+ 
+    pendingarticles := a.tarticles - a.particles
+    fmt.Printf("\nPending articles: %d", pendingarticles)
+}
+ 
+// Main value
+func main() {
+ 
+    // Assigning values 
+    // to the structure
+    values := author{
+        a_name:    "Mickey",
+        branch:    "Computer science",
+        college:   "XYZ",
+        year:      2012,
+        salary:    50000,
+        particles: 209,
+        tarticles: 309,
+    }
+ 
+    // Accessing the method
+    // of the interface 1
+    var i1 AuthorDetails = values
+    i1.details()
+ 
+    // Accessing the method
+    // of the interface 2
+    var i2 AuthorArticles = values
+    i2.articles()
+ 
+}
+
+############
+To Create migration script for adding users table
+migrate create -ext sql -dir db/migration/ -seq add_users
+
+#######
+Bcrypt algo
+plain txt+ cost +salt= hashed password
+produces different hashes each time..
+
+Pass for eg:
+algo$cost$cost$salt$hash
+2l$2digits$22chars(16bits)$24bytes(31chars)
+########
+Security/ JWT/Paseto
+
+JWT --Json Web Token --has some security issues
+
+It is base 64 encrypted
+
+having three components:
+1) Signing Algorithm and tokentype
+2)Payload
+3)Digital Signature (this only server have private key to sign the token)
+so if hacker attempts to send request with wrong secret key 
+it will be detected by the server.
+
+-->JWT signing algo's
+1)Symmetric digital signature Algorithm
+-->same key is used to sign and verify token.
+-->for local use:internal services,where the key can be shared, eg: HS256,HS386,HS512
+ HS256=HMAC+SHA256
+HMAC = Hash based MEssage authentication code
+SHA  = Secure Hash Algorithm
+256/384/512: number of output bits
+2)Asymmetric  digital secret Algorithm
+-->The private key is used to sign the token
+-->The public key is used to verify the token
+-->For Public Use:internal service signs the token , 
+but external service needs to verify it.
+RS256,RS384,RS512 || PS256,PS384,PS512 || ES256,ES384,ES512
+
+RS256 = RSA PKCSv1.5 + SHA256 [PKCS:Public-Key Cryptography Standards]
+PS256 = RSA PSS + SHA256 [Probabilistic Signature Signature Scheme]
+ES256 = ECDSA+ SHA256 [ECDSA:Elliptic Curve Digital Signature Algorithm]
+
+Problem:too many algo to choose
+1)RSA   : Padding Oracle attack
+2)ECDSA : Invalid curve attack
+
+Trivial forgery
+-->set alg header as   "none"
+-->set alg header to "HS256" while the server normally verifies token 
+   with RSA public key,
+
+   Therefore servre must check the header first before signing in the tokens
+
+PASETO: Platform-Agnostic Security Tokens
+Stronger Algorithms
+Only need to select version to use por PASETO
+Each version has 1 strong cipher suite
+Only 2 most recent PASTO versions are accepted
+
+v1) compatible with legacy systems:
+ --> local : <symmteric key>
+    Authenticated Encryption
+    AES256 CTR + HMAC SHA384
+ --> public: <asymmetric key>
+     Digital Signature
+     RSAPSS + SHA384  
+
+-->Non Trivial Forgery:
+    No more algo header or none algo
+Everything is Authenticated
+Encrypted payload for local use<symmetric key> 
+
+v2:
+ local:<symmetric>
+    Authenticated Encryption
+    XChaCha20-Poly1305
+ public:<asymmetric key>  --in this payload is not encrypted
+    Digital Signature
+    Ed25519[EdDSA + Curve25519]
+
+ Paseto request structure:
+ Local-->
+ 1) Version:v2
+ 2) Purpose :local[symmetric-key authenticated encryption]
+ 3) Payload : [hex-encoded]
+     Body:
+        Encrypted:
+        Decrypted:
+     Nonce: Authorises and used for encrypting data
+     Authorisatio tag: to authorise the encrypted data
+4)Footer:it is encoded , for addtional info
+Public:
+1) Version:v2
+ 2) Purpose :public[asymmetric-key digital signature]
+ 3) Payload : 
+     Body:
+        Encoded[base-64]:
+        Decoded:
+
+1) Ves
+######
+#######

@@ -4,20 +4,25 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"sync"
 )
 
+type Store interface {
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+}
+
 // Store provides all functions to execute db queries and trasaction
-type Store struct { //example of composition analogy to inheritance in other languages
+type SQLStore struct { //example of composition analogy to inheritance in other languages
 	*Queries
 	db *sql.DB
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
+
 }
 
 //BeginTx starts a transaction.
@@ -50,7 +55,7 @@ func NewStore(db *sql.DB) *Store {
 //that transaction's connection is returned to DB's idle connection pool.
 //The pool size can be controlled with SetMaxIdleConns.
 
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -79,9 +84,10 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
-var txKey = struct{}{}
+var txKey struct{}
 
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams, mut *sync.RWMutex) (TransferTxResult, error) {
+// func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams, mut *sync.RWMutex) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error

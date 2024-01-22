@@ -17,9 +17,10 @@ FOR NO KEY UPDATE;
 
 -- name: ListAccounts :many
 SELECT * FROM accounts
+WHERE owner=$1
 ORDER BY id
-limit $1
-offset $2;
+limit $2
+offset $3;
 
 -- name: AddAccountBalance :one
 UPDATE accounts 

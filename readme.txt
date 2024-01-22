@@ -191,3 +191,127 @@ delete the personal tokens and create the new one where workflow is checked.
 
 ####
 make mod init in project root , directory where you want to run test command(go test -cover ./...) to cover all packages/sub packages
+
+####
+gin-- web framework(most popular)
+
+Get request for gin(URI):
+http://localhost:8080/accounts/1
+
+Get request for gin(form/params):
+
+http://localhost:8080/accounts?page_id=2&page_size=5
+
+#######
+Viper
+1) Find,load,unmarshall config file
+  JSON,TOML,YAML,ENV,INI
+2) Read config from environment variables or flags
+(Override existing values,set default values)
+3)Read config from remote system
+(Etcd,Consul)
+4)Live Watching and writing config file
+(Reread changed file ,save any modifications)
+
+Viper uses the following precedence order. Each item takes precedence over the item below it:
+
+explicit call to Set
+flag
+env
+config
+key/value store
+default
+
+go get github.com/spf13/viper
+###############
+go install github.com/golang/mock/mockgen@v1.6.0
+go get github.com/golang/mock/mockgen/model
+go install github.com/golang/mock/mockgen/model
+
+
+mockgen -package mockdb -destination db/mock/store.go SimpleBank/db/sqlc Store
+
+
+this will create interface with the mentioned package and in the mentioned destination
+and with the mentioned interface i.e.Store present in the mention import path(this is called reflection mod)
+#########
+In sqlc.yaml
+On turning emit_interface as true , 
+it will provide interface to the all the sql functions, in this for eg,
+It provided Querier interface
+
+
+##########
+Example of interface and struct being used together
+type AuthorDetails interface {
+    details()
+}
+ 
+// Interface 2
+type AuthorArticles interface {
+    articles()
+}
+ 
+// Structure
+type author struct {
+    a_name    string
+    branch    string
+    college   string
+    year      int
+    salary    int
+    particles int
+    tarticles int
+}
+ 
+// Implementing method 
+// of the interface 1
+func (a author) details() {
+ 
+    fmt.Printf("Author Name: %s", a.a_name)
+    fmt.Printf("\nBranch: %s and passing year: %d", a.branch, a.year)
+    fmt.Printf("\nCollege Name: %s", a.college)
+    fmt.Printf("\nSalary: %d", a.salary)
+    fmt.Printf("\nPublished articles: %d", a.particles)
+ 
+}
+ 
+// Implementing method
+// of the interface 2
+func (a author) articles() {
+ 
+    pendingarticles := a.tarticles - a.particles
+    fmt.Printf("\nPending articles: %d", pendingarticles)
+}
+ 
+// Main value
+func main() {
+ 
+    // Assigning values 
+    // to the structure
+    values := author{
+        a_name:    "Mickey",
+        branch:    "Computer science",
+        college:   "XYZ",
+        year:      2012,
+        salary:    50000,
+        particles: 209,
+        tarticles: 309,
+    }
+ 
+    // Accessing the method
+    // of the interface 1
+    var i1 AuthorDetails = values
+    i1.details()
+ 
+    // Accessing the method
+    // of the interface 2
+    var i2 AuthorArticles = values
+    i2.articles()
+ 
+}
+
+############
+To Create migration script for adding users table
+migrate create -ext sql -dir db/migration/ -seq add_users
+
+#######

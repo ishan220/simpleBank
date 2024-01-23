@@ -31,9 +31,41 @@ docker rm <containername>
 gmake postgres //execute the command mentioned in makefile
 gmake createdb //execute the command mentioned in makefile
 ######
+docker rmi 08c2215aea5e  (to remove the image with imageid)
+docker rm container_name
+
+######
+for any command lookup
+docker command --help
+########
 migrate -path=db/migration -database "postgres://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up  //it executes the upmigration script
 gmake migrateup
 #######
+
+docker build -t imagename:tag <directory of the docker file>
+
+##############
+Docker networking...
+##############
+
+(docker network inspect <network_name>)
+docker network inspect bridge  
+
+(docker run --name simplebank -p 8080:8080 -e "DATA_SOURCE=postgres://root:secret@<postgrescontainer ip>:5432/simple_bank?sslmode=disable" <image_name>)
+docker run --nam    e simplebank -p 8080:8080 -e "DATA_SOURCE=postgres://root:secret@172.17.0.2:5432/simple_bank?sslmode=disable" simplebank:latest
+
+(docker network create <network_name>)
+docker network create simplebank_network
+
+(docker network connect simplebank_network postgres16)
+docker network connect <network_name> <container_name>
+
+(docker container inspect <container_name>)
+
+(docker run --name <container_name> --network <network_name> -p <endpointport>:<dockernetport> -e DATA_SOURCE="postgres://root:secret@<containername inside the network>:5432/simple_bank?sslmode=disable" <image_name>
+)
+docker run --name simplebank --network simplebank_network -p 8080:8080 -e DATA_SOURCE="postgres://root:secret@postgres16:5432/simple_bank?sslmode=disable" simplebank:latest
+###############
 \q  --> to quit psql prompt
 
 #######
@@ -181,6 +213,12 @@ enter password:settings->developer settings->gen personal token->
 copy paste that token(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)
 https://github.com/ishan220/simpleBank.git main
 
+
+git checkout -b ft/docker
+git add remote origin https://github.com/ishan220/simpleBank.git
+git add .
+git commit -m "message"
+git push --set-upstream origin ft/docker
 
 to unset the cached credentials:
 //git config --global --unset credential.helper  //this did not work
